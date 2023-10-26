@@ -4,15 +4,13 @@
 
 ### 2. 팀소개
 
-한정훈, ironman@marvel.com, 백앤드 개발 (Data Proprocessing - Object Detection 담당)
+한정훈, hgh5469@naver.com, 백앤드 개발 (Data Proprocessing - Object Detection 담당)
 
-김민호, spiderman@marvel.com, 프론트엔드 개발 (UI 및 전체 구조 담당)
+김민호, 프론트엔드 개발 (UI 및 전체 구조 담당)
 
-하평안, doctorstrange@marvel.com, 백앤드 개발 (Data Proprocessing - NLP 담당)
+하평안, 백앤드 개발 (Data Proprocessing - NLP 담당)
 
 ### 3. 시스템 구성도
-
-
 
 ![KakaoTalk_20231016_221622353](https://github.com/pnucse-capstone/capstone-2023-1-12/assets/75206681/f294c23e-70db-46e0-a0a6-5ccfdb35582a)
 
@@ -22,8 +20,5 @@
 
 ### 5. 설치 및 사용법
 
-본 프로젝트는 Ubuntu 20.04 버전에서 개발되었으며 함께 포함된 다음의 스크립트를 수행하여 
-관련 패키지들의 설치와 빌드를 수행할 수 있습니다.
 ```
-$ ./install_and_build.sh
 ```
