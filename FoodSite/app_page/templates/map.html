@@ -1,0 +1,219 @@
+{% load static %}
+<!-- <div id="map" style="width:100%;height:100vh;"></div> -->
+<div id="mapwrap">
+  <div id="map" style="width:100%;height:90vh;"></div>
+  <div class="category">
+    <ul>
+      {% for service in service_list %}
+        <li id='{{service}}' onclick="changeMarker('{{service}}')">
+          <span class="ico_{{service}}" >
+          </span>
+          {{service}}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6d9b670408e95279b9d4a0689341f1cd"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.4/proj4.js"></script>
+<script>
+  var points = [];
+  pushPoints();
+
+  var init_point = {'x':points[0].point.x, 'y':points[0].point.y};
+  proj4.defs([
+    [
+      'EPSG:2097',
+      '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=bessel +units=m +no_defs +towgs84=-115.80,474.99,674.11,1.16,-2.31,-1.63,6.43'
+    ],
+    [
+      'ESPG:4326',
+      '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs '
+    ],
+  ]);
+  
+  var container = document.getElementById('map');
+  var options = {
+    center: setPosition(init_point),
+    level: 3
+  };
+
+  var map = new kakao.maps.Map(container, options);
+
+  var marker_informations = {{ marker_informations|safe }};
+  var markers = [];
+  var markers_categorical = {};
+
+  {% for service in service_list %} 
+    markers_categorical['{{service}}'] = [];
+    setImage('{{service}}', marker_informations['{{service}}'].box);
+  {% endfor %}
+
+  points.reverse().forEach((value, index, array)=>{
+    setMarkers(value);
+  });
+  
+
+  {% for service in service_list %} 
+    changeMarker('{{service}}');
+  {% endfor %}
+
+
+
+
+
+
+
+  function makeOverListener(map, markerObject, infowindow) {
+    return function() {
+        infowindow.open(map, markerObject.marker);
+    };
+  }
+
+  function makeClickListener(map, markerObject, link) {
+      return function() {
+          window.location.href = link;
+      };
+  }
+
+  // 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+  function makeOutListener(infowindow) {
+      return function() {
+          infowindow.close();
+      };
+  }
+
+  function createmarker_informationsize(index) {
+    if (index < 3) 
+      return {"x": 60, "y": 90};
+    if (index < 9) 
+      return {"x": 40, "y": 60};
+      if (index <= 30) 
+      return {"x": 24, "y": 35};
+    return {"x": 16, "y": 26};
+  }
+
+  function createMarkerImage(name, index) {
+    if (name in marker_informations) {
+      if (index < 9)
+        var imageSrc = marker_informations[name][(index+1).toString()];
+      else
+        var imageSrc = marker_informations[name].on;
+    }
+    else {
+      var imageSrc = marker_informations["default"].off;
+    }
+    var size = createmarker_informationsize(index);
+    var imageSize   = new kakao.maps.Size(size.x, size.y),
+        markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+    return markerImage;
+  }
+
+  function changeMarker(type) {
+    {% for service in service_list %}
+      var {{service}}Menu = document.getElementById('{{service}}');
+
+      if (type === '{{service}}') {
+        if ({{service}}Menu.className === 'menu_selected') {
+          {{service}}Menu.className = 'menu_unselected';
+          switchMarkerState(map, '{{service}}', false);
+        }
+        else {
+          {{service}}Menu.className = 'menu_selected';
+          switchMarkerState(map, '{{service}}', true);
+        }
+      }
+    {% endfor %}
+  }
+
+  function switchMarkerState(map, service_name, state) {
+    if (state) {
+      markers.forEach((markerObject, index, array)=>{
+        // alert(markerObject.service_name);
+        if (markerObject.service_name === service_name) {
+          markerObject.show_state = true;
+        }
+        if (markerObject.show_state === true) {
+          markerObject.marker.setMap(null);
+          markerObject.marker.setMap(map);
+        }
+      });
+    }
+    else {
+      markers_categorical[service_name].forEach((markerObject, index, array)=>{
+        markerObject.show_state = false;
+        markerObject.marker.setMap(null);
+      });
+    }
+  }
+
+  function pushPoints() {
+    {% for result in search_results %}
+      points.push({
+        index: {{ forloop.counter0 }},
+        service: '{{ result.service.service }}',
+        point: { x: {{ result.x_coordinate }}, y: {{ result.y_coordinate }} },
+        title: '{{ result.name }}',
+        content: '<div>{{ result.name }}</div>',
+        pk: {{ result.pk }},
+      });
+    {% endfor %}
+  }
+
+  function setPosition(point) {
+    var newPoint = proj4('EPSG:2097', 'EPSG:4326', point);
+    newPoint.x += .0029;
+    var markerPosition = new kakao.maps.LatLng(newPoint.y, newPoint.x);
+    return markerPosition;
+  }
+
+  function setMarkers(point) {
+    var marker = new kakao.maps.Marker({
+      map: map,
+      position: setPosition(point.point),
+      title: point.title,
+      image: createMarkerImage(point.service, point.index),
+    });
+    var markerObject = {
+      'marker': marker,
+      'service_name': point.service,
+      'show_state': true,
+    }
+    markerObject.marker.setMap(map);
+    if (markers_categorical.hasOwnProperty(point.service))
+      markers_categorical[point.service].push(markerObject);
+    markers.push(markerObject);
+
+    // var infowindow = new kakao.maps.InfoWindow({
+    //     content: point.content // 인포윈도우에 표시할 내용
+    // });
+    // kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+    // kakao.maps.event.addListener(marker, 'click',     makeClickListener(map, marker, `/result/${point.pk}/?{{ org_query|safe }}`));
+    // kakao.maps.event.addListener(marker, 'mouseout',  makeOutListener(infowindow));
+  }
+
+  function setImage(category_name, src) {
+
+    var iconElement = document.querySelector('.ico_' + category_name);
+    var img = document.createElement('img');
+    img.src = src;
+    img.alt = category_name;
+    
+    // 이미지 크기 설정 (예: 100픽셀 너비, 100픽셀 높이)
+    img.width = 50;
+    img.height = 50;
+    
+    // 이미지를 요소에 추가
+    iconElement.innerHTML = ''; // 기존 내용 지우기
+    iconElement.appendChild(img);
+  }
+
+
+</script>
+<style>
+#mapwrap{position:relative;overflow:hidden;}
+.category, .category *{margin:0;padding:0;color:#000;}   
+.category {position:absolute;overflow:hidden;top:10px;left:10px;width:500px;height:80px;z-index:10;border:1px solid black;font-family:'Malgun Gothic','맑은 고딕',sans-serif;font-size:12px;text-align:center;background-color:#fff;}
+.category .menu_selected {background:#FF5F4A;color:#fff;border-left:1px solid #915B2F;border-right:1px solid #915B2F;margin:0 -1px;} 
+.category li{list-style:none;float:left;width:70px;height:80px;padding-top:5px;cursor:pointer;} 
+</style>

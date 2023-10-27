@@ -1,0 +1,52 @@
+<div id="map" style="width:640px;height:360px;"></div>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6d9b670408e95279b9d4a0689341f1cd"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.4/proj4.js"></script>
+<script>
+  // var point = { x:389969.69990631, y: 194245.391458314 };
+  var init_point = { x: {{ restaurant.x_coordinate }}, y: {{ restaurant.y_coordinate }} };
+  proj4.defs([
+    [
+      'EPSG:2097',
+      '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=bessel +units=m +no_defs +towgs84=-115.80,474.99,674.11,1.16,-2.31,-1.63,6.43'
+    ],
+    [
+      'ESPG:4326',
+      '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs '
+    ],
+  ]);
+  
+  var epsg2097Coord = { x: init_point.x, y: init_point.y };
+  var epsg4326Coord = proj4('EPSG:2097', 'EPSG:4326', epsg2097Coord);
+
+  var container = document.getElementById('map');
+  var options = {
+    center: new kakao.maps.LatLng(epsg4326Coord.y, epsg4326Coord.x+.0029),
+    level: 3
+  };
+
+  var map = new kakao.maps.Map(container, options);
+
+  var points = [
+    {
+      point: { x: {{ restaurant.x_coordinate }}, y: {{ restaurant.y_coordinate }} },
+    },
+  ];
+  points.forEach((value, index, array)=>{
+    var newPoint = proj4('EPSG:2097', 'EPSG:4326', value.point);
+    newPoint.x += .0029;
+    var markerPosition = new kakao.maps.LatLng(newPoint.y, newPoint.x);
+    var marker = new kakao.maps.Marker({
+      map: map,
+      position: markerPosition,
+    });
+    var infowindow = new kakao.maps.InfoWindow({
+        content: value.content // 인포윈도우에 표시할 내용
+    });
+  })
+  // var marker = new kakao.maps.Marker({
+  //   position: markerPosition
+  // });
+
+  // marker.setMap(map);
+
+</script>

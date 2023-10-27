@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .restaurant-info {
+        padding: 10%; /* 10% padding */
+    }
+
+    .restaurant-name {
+        border: 2px solid #FFD700; /* Yellow border */
+        border-radius: 10px; /* Rounded corners */
+        padding: 10px; /* Padding inside the box */
+        background-color: #FFD700; /* Yellow background color */
+        font-weight: bold; /* Bold text */
+        font-size: 40px; /* 40px font size */
+        text-align: center;
+    }
+
+    .restaurant-category {
+        font-size: 16px;
+        color: #808080;
+    }
+
+    .restaurant-location {
+        padding-top: 100px;
+    }
+
+    .menu-section {
+        padding-top: 100px;
+    }
+
+    .video-section {
+        padding-top: 100px;
+    }
+</style>
+
+<div class="restaurant-info">
+    <div class="restaurant-name">
+        <p class="restaurant-category"></br></p>
+        <h1 >{{ restaurant.name }}</h1>
+        <p class="restaurant-category">
+            {{ restaurant.service }}
+        </p>
+    </div>
+
+    <div class="video-section">
+        <h2>링크</h2>
+        <div id="iframeContainer"></div>
+        {% if videos %}
+            <ul class="video-list">
+                {% for video in videos %}
+                    <li>
+                        <button onclick="showIframe('{{video.address}}', '{{video.time_contents}}')">{{ video.name }}</button>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <div class="menu-section">
+        <h2>메뉴</h2>
+        <div class="menu-list">
+            {% if menus %}
+                {% for menu in menus %}
+                    <!-- <li>{{ menu.name }} ({{ menu.price }})</li> -->
+                    <!-- <li>{{ menu }}</li>
+                     -->
+                    <div class="menu-box">
+                        <div class="'menu-left">
+                            {{ menu.name }}
+                        </div>
+                        <div class="'menu-right">
+                            {% if menu.price != 0 %}
+                                {{ menu.price }}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="restaurant-location">
+        <h2>주소</h2>
+        <p>소재지주소: {{ restaurant.full_address }}</p>
+        <p>도로명주소: {{ restaurant.road_address }}</p>
+        <div style="justify-content:center;align-items:center;display:flex;">
+            {% include 'map2.html' %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+    {{block.super}}
+
+    <script>
+        function showIframe(address, time_contents) {
+            // 이전 iframe 제거
+            const iframeContainer = document.getElementById('iframeContainer');
+            while (iframeContainer.firstChild) {
+                iframeContainer.removeChild(iframeContainer.firstChild);
+            }
+
+            // 새로운 iframe 생성 및 추가
+            const newIframe = document.createElement('iframe');
+            newIframe.setAttribute('width', '560');
+            newIframe.setAttribute('height', '315');
+            newIframe.setAttribute('src', `https://www.youtube.com/embed/${address}${time_contents}`);
+            newIframe.setAttribute('frameborder', 0);
+            newIframe.setAttribute('allow', "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture");
+            iframeContainer.appendChild(newIframe);
+        }
+    </script>
+{% endblock js %}
