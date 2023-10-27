@@ -1,0 +1,21 @@
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3" href="{% url 'app_page:first_index' %}">Mhat GPT</a>
+    <!-- Sidebar Toggle-->
+    <!-- <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button> -->
+    <!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" action="{% url 'app_page:search' %}" method="GET">
+      <div style="display: flex;">
+        <div style="float: left">
+          <div class="input-group">
+            <input class="form-control" type="text" name="location_query" placeholder="가게 위치" aria-label="가게 위치" />
+            <input class="form-control" type="text" name="name_query" placeholder="가게명" aria-label="가게명" />
+          </div>
+          <div class="input-group">
+            <input class="form-control" type="text" name="gpt_query" placeholder="GPT Message" aria-label="GPT Message" />
+          </div>
+        </div>
+        <button style="float: left" class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+      </div>
+  </form>
+</nav>

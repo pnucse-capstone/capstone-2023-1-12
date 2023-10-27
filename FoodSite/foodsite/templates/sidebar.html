@@ -1,0 +1,18 @@
+<div id="layoutSidenav_nav">
+  <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+      <div class="sb-sidenav-menu">
+          <div class="nav">
+            {% if search_results %}
+                <div class="sb-sidenav-menu-heading">검색결과: {{ search_results|length }}개</div>
+                {% for result in search_results %}
+                  <li class="sidebar-restaurant">
+                    <a style="color: #fff; float: left;" href="{% url 'app_page:result' result.pk %}?{{ org_query }}">{{ result.name }}</a>
+                    <span style="float: right;">{{ result.service }}</span> 
+                  </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+          </div>
+      </div>
+  </nav>
+</div>
