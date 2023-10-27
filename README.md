@@ -20,5 +20,6 @@
 
 ### 5. 설치 및 사용법
 
-```
-```
+```Object Detection 관련 설치
+```pip install pytorch
+```pip install ultralytics
