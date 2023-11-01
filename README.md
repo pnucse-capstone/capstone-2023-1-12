@@ -14,8 +14,9 @@
 
 ![KakaoTalk_20231016_221622353](https://github.com/pnucse-capstone/capstone-2023-1-12/assets/75206681/f294c23e-70db-46e0-a0a6-5ccfdb35582a)
 
-### 4. 시연 동영상
+### 4. 프로젝트 소개 영상
 
+[![Youtube Meta Data를 이용한 맛집 추천 서비스](https://www.youtube.com/watch?v=nZJORLgo0Tk&list=PLFUP9jG-TDp96chsm66TfMPlAJXIt6Gr9&index=12/0.jpg)](https://www.youtube.com/watch?v=nZJORLgo0Tk&list=PLFUP9jG-TDp96chsm66TfMPlAJXIt6Gr9&index=12)
 
 
 ### 5. 설치 및 사용법
