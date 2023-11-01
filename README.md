@@ -16,9 +16,7 @@
 
 ### 4. 프로젝트 소개 영상
 
-[![Youtube Meta Data를 이용한 맛집 추천 서비스](https://www.youtube.com/watch?v=nZJORLgo0Tk/0.jpg)](https://www.youtube.com/watch?v=nZJORLgo0Tk)
-
-https://www.youtube.com/watch?v=nZJORLgo0Tk
+[![Youtube Meta Data를 이용한 맛집 추천 서비스](http://img.youtube.com/vi/nZJORLgo0Tk/0.jpg)](https://www.youtube.com/watch?v=nZJORLgo0Tk)
 
 ### 5. 설치 및 사용법
 
